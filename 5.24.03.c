@@ -1,7 +1,7 @@
 //二叉排序树Binary Search Tree[BST]
 #include<stdio.h>
 #include<stdlib.h>
-#define MaxSize 12
+#define MaxSize 15
 typedef int ElemType;
 typedef struct BiTNode{
 	ElemType data;
@@ -9,7 +9,7 @@ typedef struct BiTNode{
 }BiTNode,*BiTree;
 
 BiTNode* CreateBiTree(BiTNode*,ElemType*);
-void BST_Insert(BiTNode**,ElemType);
+int BST_Insert(BiTNode**,ElemType);
 int BST_Search(BiTNode*,ElemType);
 int BST_Delete(BiTNode*,ElemType);
 void BST_Judge(BiTNode*);
@@ -20,7 +20,7 @@ void InOrder(BiTNode*);
 int main(int argc,char* argv[]){
 	printf(">> %s|%s|%d Complete\n",__FILE__,__FUNCTION__,__LINE__);
 	ElemType ch[MaxSize]={
-		9,5,10,3,7,11,3,6,8,2,4,-1	
+		9,5,10,10,3,7,11,3,6,8,2,4,-1	
 	};
 
 	BiTNode* T=NULL;
@@ -42,25 +42,32 @@ int main(int argc,char* argv[]){
 
 BiTNode* CreateBiTree(BiTNode* T,ElemType ch[]){
 	printf(">> %s|%s|%d Complete\n",__FILE__,__FUNCTION__,__LINE__);
+	int flag;
 	for(int i=0;i<MaxSize&&ch[i]!=-1;i++){
-		BST_Insert(&T,ch[i]);
+		flag=BST_Insert(&T,ch[i]);
+		if(flag){
+			printf("Insert Failed, Have '%d'\n",ch[i]);
+			break;
+		}
 	}
 	return T;
 }
 
-void BST_Insert(BiTNode** T,ElemType ch){
+int BST_Insert(BiTNode** T,ElemType ch){
 	if(*T==NULL){
 		*T=(BiTNode*)malloc(sizeof(BiTNode));
 		(*T)->data=ch;
 		(*T)->lchild=NULL;
 		(*T)->rchild=NULL;
 	}
-	if(ch<(*T)->data){
-		BST_Insert(&(*T)->lchild,ch);
+	if(ch==(*T)->data){
+		return -1;
+	}else if(ch<(*T)->data){
+		return BST_Insert(&(*T)->lchild,ch);
+	}else{
+		return BST_Insert(&(*T)->rchild,ch);
 	}
-	if(ch>(*T)->data){
-		BST_Insert(&(*T)->rchild,ch);
-	}
+	return 0;
 }
 
 int BST_Search(BiTNode* T, ElemType ch){
