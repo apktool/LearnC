@@ -10,7 +10,7 @@ typedef struct BiTNode{
 
 BiTNode* CreateBiTree(BiTNode*,ElemType*);
 void BST_Insert(BiTNode**,ElemType);
-void BST_Search(BiTNode*,ElemType);
+int BST_Search(BiTNode*,ElemType);
 
 void PreOrder(BiTNode*);
 void InOrder(BiTNode*);
@@ -22,10 +22,19 @@ int main(int argc,char* argv[]){
 
 	BiTNode* T=NULL;
 	T=CreateBiTree(T,ch);
+
 	PreOrder(T);
 	printf("\n");
 	InOrder(T);
 	printf("\n");
+
+	int flag;
+	flag=BST_Search(T,9);
+	if(!flag){
+		printf("Find\n");
+	}else{
+		printf("NO Find\n");
+	}
 
 	printf("%s|%d Complete\n",__FUNCTION__,__LINE__);
 
@@ -51,6 +60,19 @@ void BST_Insert(BiTNode** T,ElemType ch){
 	}
 	if(ch>(*T)->data){
 		BST_Insert(&(*T)->rchild,ch);
+	}
+}
+
+int BST_Search(BiTNode* T, ElemType ch){
+	if(T==NULL){
+		return -1;
+	}
+	if(ch<T->data){
+		BST_Search(T->lchild,ch);
+	}else if(ch>T->data){
+		BST_Search(T->rchild,ch);
+	}else{
+		return 0;
 	}
 }
 
