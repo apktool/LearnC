@@ -1,76 +1,83 @@
-//二叉排序树Binary Search Tree[BST]
 #include<stdio.h>
 #include<stdlib.h>
-#define MaxSize 15
+#define MaxSize 20
+
 typedef int ElemType;
 typedef struct BiTNode{
 	ElemType data;
-	struct BiTNode *lchild, *rchild;
+	struct BiTNode *lchild,*rchild;
 }BiTNode,*BiTree;
 
-BiTNode* CreateBiTree(BiTNode*,ElemType*);
+BiTNode* BST_Create(BiTNode*,ElemType*);
 int BST_Insert(BiTNode**,ElemType);
 int BST_Search(BiTNode*,ElemType);
 int BST_Delete(BiTNode*,ElemType);
-void BST_Judge(BiTNode*);
 
+void BST_Judge(BiTNode*);
 void PreOrder(BiTNode*);
 void InOrder(BiTNode*);
 
-int main(int argc,char* argv[]){
-	printf(">> %s|%s|%d Complete\n",__FILE__,__FUNCTION__,__LINE__);
+int main(int argc, char* argv[]){
 	ElemType ch[MaxSize]={
-		9,5,10,10,3,7,11,3,6,8,2,4,-1	
+		9,5,13,3,7,11,15,4,6,10,16,-1
 	};
 
 	BiTNode* T=NULL;
-	T=CreateBiTree(T,ch);
-
-	BST_Judge(T);
-
-	int flag,no=1;
+	T=BST_Create(T,ch);
 	
-	flag=BST_Search(T,no);
-	flag?printf("No Find %d, ",no):printf("Find %d, ",no);
-	flag=BST_Delete(T,no);
-	flag?printf("Delete Failed,Have no '%d'\n",no):printf("Delete Success\n");
-
 	BST_Judge(T);
 
+	int flag;
+	ElemType num;
+	printf("Please input the number you will insert: ");
+	scanf("%d",&num);
+
+	flag=BST_Insert(&T,num);
+	flag?printf("Illeged Insert\n"):printf("Insert Success\n");
+
+	printf("Please input the number you will Find: ");
+	scanf("%d",&num);
+	flag=BST_Search(T,num);
+	flag?printf("Not Found\n"):printf("Find the number: %d\n",num);
+
+	printf("Please input the number you will Delete: ");
+	scanf("%d",&num);
+	flag=BST_Delete(T,num);
+	flag?printf("illege Delete\n"):printf("Delete Success\n");
+
+	BST_Judge(T);
 	return 0;
 }
 
-BiTNode* CreateBiTree(BiTNode* T,ElemType ch[]){
-	printf(">> %s|%s|%d Complete\n",__FILE__,__FUNCTION__,__LINE__);
-	int flag;
-	for(int i=0;i<MaxSize&&ch[i]!=-1;i++){
-		flag=BST_Insert(&T,ch[i]);
+BiTree BST_Create(BiTNode* T, ElemType ch[]){
+	int flag,i=0;
+	while(ch[i]!=-1){
+		flag=BST_Insert(&T,ch[i++]);
 		if(flag){
-			printf("Insert Failed, Have '%d'\n",ch[i]);
-			break;
+			printf("Illeged Insert\n");
 		}
 	}
 	return T;
 }
 
 int BST_Insert(BiTNode** T,ElemType ch){
-	if(*T==NULL){
-		*T=(BiTNode*)malloc(sizeof(BiTNode));
+	if((*T)==NULL){
+		(*T)=(BiTNode*)malloc(sizeof(BiTNode));
 		(*T)->data=ch;
 		(*T)->lchild=NULL;
 		(*T)->rchild=NULL;
+		return 0;
 	}
-	if(ch==(*T)->data){
-		return -1;
-	}else if(ch<(*T)->data){
+	if(ch<(*T)->data){
 		return BST_Insert(&(*T)->lchild,ch);
-	}else{
+	}else if(ch>(*T)->data){
 		return BST_Insert(&(*T)->rchild,ch);
+	}else{
+		return -1;
 	}
-	return 0;
 }
 
-int BST_Search(BiTNode* T, ElemType ch){
+int BST_Search(BiTNode* T,ElemType ch){
 	if(T==NULL){
 		return -1;
 	}
@@ -84,14 +91,9 @@ int BST_Search(BiTNode* T, ElemType ch){
 }
 
 int BST_Delete(BiTNode* T,ElemType ch){
+	BiTNode *pre=T;
 	BiTNode *p=T;
-	BiTNode *pre=NULL;
-
-	while(p->data!=ch){
-		if(p->lchild==NULL&&p->rchild==NULL){
-			return -1;
-		}
-
+	while(p!=NULL){
 		if(ch<p->data){
 			pre=p;
 			p=p->lchild;
@@ -102,18 +104,19 @@ int BST_Delete(BiTNode* T,ElemType ch){
 			break;
 		}
 	}
+	if(p==NULL){
+		return -1;
+	}
 
-	//该节点为叶子结点
 	if(p->lchild==NULL&&p->rchild==NULL){
 		if(p->data<pre->data){
 			pre->lchild=NULL;
 		}else{
 			pre->rchild=NULL;
-		}
+		}	
 		free(p);
 	}
 
-	//该节点只有左子树而没有右子树
 	if(p->lchild!=NULL&&p->rchild==NULL){
 		if(p->data<pre->data){
 			pre->lchild=p->lchild;
@@ -123,7 +126,6 @@ int BST_Delete(BiTNode* T,ElemType ch){
 		free(p);
 	}
 
-	//该节点只有右子树而没有左子树
 	if(p->lchild==NULL&&p->rchild!=NULL){
 		if(p->data<pre->data){
 			pre->lchild=p->rchild;
@@ -133,7 +135,6 @@ int BST_Delete(BiTNode* T,ElemType ch){
 		free(p);
 	}
 
-	//该节点同时拥有左右子树
 	if(p->lchild!=NULL&&p->rchild!=NULL){
 		BiTNode *r=p;
 		p=p->rchild;
@@ -142,17 +143,19 @@ int BST_Delete(BiTNode* T,ElemType ch){
 			p=p->lchild;
 		}
 		r->data=p->data;
-
 		if(p->data<pre->data){
-			pre->lchild=r->lchild;
+			pre->lchild=p->rchild;
 		}else{
 			pre->rchild=p->rchild;
 		}
-
 		free(p);
 	}
-
 	return 0;
+}
+
+void BST_Judge(BiTNode* T){
+	PreOrder(T);printf("\n");
+	InOrder(T);printf("\n");
 }
 
 void PreOrder(BiTNode* T){
@@ -171,11 +174,4 @@ void InOrder(BiTNode* T){
 	InOrder(T->lchild);
 	printf("%3d",T->data);
 	InOrder(T->rchild);
-}
-
-void BST_Judge(BiTNode* T){
-	PreOrder(T);
-	printf("\n");
-	InOrder(T);
-	printf("\n");
 }
