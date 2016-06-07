@@ -1,3 +1,4 @@
+//二叉排序树|Binary Search Tree[BST]
 #include<stdio.h>
 #include<stdlib.h>
 #define MaxSize 20
