@@ -36,27 +36,27 @@ int main(int argc,char* argv[]){
 
 	AVL_Judge(T);
 
-/*
 	int flag;
 	ElemType num;
 
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
-	flag=AVL_Insert(&T,num);
-	flag?printf("illegal Insert\n"):printf("Insert Success\n");
+	T=AVL_Insert(&T,num);
+	T?printf("Insert Success\n"):printf("illegal Insert\n");
 
 	printf("Please input the number you want to find: ");
 	scanf("%d",&num);
 	flag=AVL_Search(T,num);
 	flag?printf("Not Find\n"):printf("Find it\n");
 
+/*
 	printf("Please input the number you want to delete: ");
 	scanf("%d",&num);
 	flag=AVL_Delete(T,num);
 	flag?printf("Delete Failed\n"):printf("Delete Success\n");
+*/
 
 	AVL_Judge(T);
-*/
 	return 0;
 }
 
@@ -102,6 +102,19 @@ BiTNode* AVL_Insert(BiTNode** T,ElemType ch){
 	}
 	(*T)->height=Max(Height((*T)->lchild),Height((*T)->rchild))+1;
 	return (*T);
+}
+
+int AVL_Search(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		return -1;
+	}
+	if(ch<T->data){
+		return AVL_Search(T->lchild,ch);
+	}else if(ch>T->data){
+		return AVL_Search(T->rchild,ch);
+	}else{
+		return 0;
+	}
 }
 
 BiTNode* RotateLeftLeft(BiTNode* T){
