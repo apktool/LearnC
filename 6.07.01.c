@@ -11,7 +11,7 @@ typedef struct BiTNode{
 }BiTNode, BiTree;
 
 BiTNode* AVL_Create(BiTNode*,ElemType*);
-int AVL_Insert(BiTNode**,ElemType);
+int  AVL_Insert(BiTNode**,ElemType);
 int AVL_Search(BiTNode*,ElemType);
 int AVL_Delete(BiTNode*,ElemType);
 
@@ -30,7 +30,7 @@ void RotateRightLeft(BiTNode*);
 int main(int argc,char* argv[]){
 	BiTNode* T=NULL;
 	ElemType ch[MaxSize]={
-		6,3,7,1,4,2,-1
+		1,2,3,4,5,6,7,8,-1
 	};
 	T=AVL_Create(T,ch);
 
@@ -76,9 +76,9 @@ int AVL_Insert(BiTNode** T,ElemType ch){
 	if((*T)==NULL){
 		(*T)=(BiTNode*)malloc(sizeof(BiTNode));
 		(*T)->data=ch;
+		(*T)->height=0;
 		(*T)->lchild=NULL;
 		(*T)->rchild=NULL;
-		(*T)->height=Max(Height((*T)->lchild),Height((*T)->rchild))+1;	
 		return 0;
 	}
 	if(ch<(*T)->data){
@@ -92,17 +92,17 @@ int AVL_Insert(BiTNode** T,ElemType ch){
 		}
 	}else if(ch>(*T)->data){
 		return AVL_Insert(&(*T)->rchild,ch);
-		if(Height((*T)->lchild)-Height((*T)->rchild)==2){
+		if(Height((*T)->rchild)-Height((*T)->lchild)==2){
 			if(ch<(*T)->rchild->data){
 				RotateRightRight(*T);
 			}else{
 				RotateRightLeft(*T);
 			}
 		}
-
 	}else{
 		return -1;
 	}
+	(*T)->height=Max(Height((*T)->lchild),Height((*T)->rchild))+1;
 }
 
 void RotateLeftLeft(BiTNode* T){
