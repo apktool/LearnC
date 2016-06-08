@@ -11,7 +11,7 @@ typedef struct BiTNode{
 }BiTNode, BiTree;
 
 BiTNode* AVL_Create(BiTNode*,ElemType*);
-int  AVL_Insert(BiTNode**,ElemType);
+BiTNode* AVL_Insert(BiTNode**,ElemType);
 int AVL_Search(BiTNode*,ElemType);
 int AVL_Delete(BiTNode*,ElemType);
 
@@ -22,10 +22,10 @@ void InOrder(BiTNode*);
 int Max(int,int);
 int Height(BiTNode*);
 
-void RotateLeftLeft(BiTNode*);
-void RotateLeftRight(BiTNode*);
-void RotateRightRight(BiTNode*);
-void RotateRightLeft(BiTNode*);
+BiTNode* RotateLeftLeft(BiTNode*);
+BiTNode* RotateLeftRight(BiTNode*);
+BiTNode* RotateRightRight(BiTNode*);
+BiTNode* RotateRightLeft(BiTNode*);
 
 int main(int argc,char* argv[]){
 	BiTNode* T=NULL;
@@ -61,10 +61,10 @@ int main(int argc,char* argv[]){
 }
 
 BiTNode* AVL_Create(BiTNode* T,ElemType ch[]){
-	int flag,i=0;
+	int i=0;
 	while(ch[i]!=-1){
-		flag=AVL_Insert(&T,ch[i++]);
-		if(flag){
+		T=AVL_Insert(&T,ch[i++]);
+		if(T==NULL){
 			printf("Insert illegal\n");
 			break;
 		}
@@ -72,40 +72,39 @@ BiTNode* AVL_Create(BiTNode* T,ElemType ch[]){
 	return T;
 }
 
-int AVL_Insert(BiTNode** T,ElemType ch){
+BiTNode* AVL_Insert(BiTNode** T,ElemType ch){
 	if((*T)==NULL){
 		(*T)=(BiTNode*)malloc(sizeof(BiTNode));
 		(*T)->data=ch;
 		(*T)->height=0;
 		(*T)->lchild=NULL;
 		(*T)->rchild=NULL;
-		return 0;
 	}
 	if(ch<(*T)->data){
-		return AVL_Insert(&(*T)->lchild,ch);
+		(*T)->lchild=AVL_Insert(&(*T)->lchild,ch);
 		if(Height((*T)->lchild)-Height((*T)->rchild)==2){
 			if(ch<(*T)->lchild->data){
-				RotateLeftLeft(*T);
+				(*T)=RotateLeftLeft(*T);
 			}else{
-				RotateLeftRight(*T);
+				(*T)=RotateLeftRight(*T);
 			}
 		}
-	}else if(ch>(*T)->data){
-		return AVL_Insert(&(*T)->rchild,ch);
+	}
+	if(ch>(*T)->data){
+		(*T)->rchild=AVL_Insert(&(*T)->rchild,ch);
 		if(Height((*T)->rchild)-Height((*T)->lchild)==2){
-			if(ch<(*T)->rchild->data){
-				RotateRightRight(*T);
+			if(ch>(*T)->rchild->data){
+				(*T)=RotateRightRight(*T);
 			}else{
-				RotateRightLeft(*T);
+				(*T)=RotateRightLeft(*T);
 			}
 		}
-	}else{
-		return -1;
 	}
 	(*T)->height=Max(Height((*T)->lchild),Height((*T)->rchild))+1;
+	return (*T);
 }
 
-void RotateLeftLeft(BiTNode* T){
+BiTNode* RotateLeftLeft(BiTNode* T){
 	BiTNode *p=T;
 	BiTNode *q=p->lchild;
 
@@ -115,16 +114,21 @@ void RotateLeftLeft(BiTNode* T){
 
 	p->height=Max(Height(p->lchild),Height(p->rchild))+1;
 	q->height=Max(Height(q->lchild),p->height)+1;
+
+	return q;
 }
 
-void RotateLeftRight(BiTNode* T){
+BiTNode* RotateLeftRight(BiTNode* T){
 	BiTNode *p=T;
 	BiTNode *q=p->lchild;
+
 	RotateRightRight(q);
 	RotateLeftLeft(p);
+
+	return q;
 }
 
-void RotateRightRight(BiTNode* T){
+BiTNode* RotateRightRight(BiTNode* T){
 	BiTNode *p=T;
 	BiTNode *q=p->rchild;
 
@@ -133,14 +137,18 @@ void RotateRightRight(BiTNode* T){
 
 	p->height=Max(Height(p->lchild),Height(p->rchild))+1;
 	q->height=Max(Height(q->rchild),p->height)+1;
+
+	return p;
 }
 
-void RotateRightLeft(BiTNode* T){
+BiTNode* RotateRightLeft(BiTNode* T){
 	BiTNode *p=T;
 	BiTNode *q=p->rchild;
 	
 	RotateLeftLeft(q);
 	RotateRightRight(p);
+
+	return p;
 }
 
 int Max(int a,int b){
