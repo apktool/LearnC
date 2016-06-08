@@ -8,12 +8,12 @@ typedef struct BiTNode{
 	ElemType data;
 	struct BiTNode *lchild,*rchild;
 	int height;
-}BiTNode, BiTree;
+}BiTNode, *BiTree;
 
 BiTNode* AVL_Create(BiTNode*,ElemType*);
-BiTNode* AVL_Insert(BiTNode**,ElemType);
-int AVL_Search(BiTNode*,ElemType);
+BiTNode* AVL_Insert(BiTNode*,ElemType);
 int AVL_Delete(BiTNode*,ElemType);
+int AVL_Search(BiTNode*,ElemType);
 
 void AVL_Judge(BiTNode*);
 void PreOrder(BiTNode*);
@@ -41,7 +41,7 @@ int main(int argc,char* argv[]){
 
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
-	T=AVL_Insert(&T,num);
+	T=AVL_Insert(T,num);
 	T?printf("Insert Success\n"):printf("illegal Insert\n");
 
 	printf("Please input the number you want to find: ");
@@ -63,7 +63,7 @@ int main(int argc,char* argv[]){
 BiTNode* AVL_Create(BiTNode* T,ElemType ch[]){
 	int i=0;
 	while(ch[i]!=-1){
-		T=AVL_Insert(&T,ch[i++]);
+		T=AVL_Insert(T,ch[i++]);
 		if(T==NULL){
 			printf("Insert illegal\n");
 			break;
@@ -72,36 +72,36 @@ BiTNode* AVL_Create(BiTNode* T,ElemType ch[]){
 	return T;
 }
 
-BiTNode* AVL_Insert(BiTNode** T,ElemType ch){
-	if((*T)==NULL){
-		(*T)=(BiTNode*)malloc(sizeof(BiTNode));
-		(*T)->data=ch;
-		(*T)->height=0;
-		(*T)->lchild=NULL;
-		(*T)->rchild=NULL;
+BiTNode* AVL_Insert(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		T=(BiTNode*)malloc(sizeof(BiTNode));
+		T->data=ch;
+		T->height=0;
+		T->lchild=NULL;
+		T->rchild=NULL;
 	}
-	if(ch<(*T)->data){
-		(*T)->lchild=AVL_Insert(&(*T)->lchild,ch);
-		if(Height((*T)->lchild)-Height((*T)->rchild)==2){
-			if(ch<(*T)->lchild->data){
-				(*T)=RotateLeftLeft(*T);
+	if(ch<T->data){
+		T->lchild=AVL_Insert(T->lchild,ch);
+		if(Height(T->lchild)-Height(T->rchild)==2){
+			if(ch<T->lchild->data){
+				T=RotateLeftLeft(T);
 			}else{
-				(*T)=RotateLeftRight(*T);
+				T=RotateLeftRight(T);
 			}
 		}
 	}
-	if(ch>(*T)->data){
-		(*T)->rchild=AVL_Insert(&(*T)->rchild,ch);
-		if(Height((*T)->rchild)-Height((*T)->lchild)==2){
-			if(ch>(*T)->rchild->data){
-				(*T)=RotateRightRight(*T);
+	if(ch>T->data){
+		T->rchild=AVL_Insert(T->rchild,ch);
+		if(Height(T->rchild)-Height(T->lchild)==2){
+			if(ch>T->rchild->data){
+				T=RotateRightRight(T);
 			}else{
-				(*T)=RotateRightLeft(*T);
+				T=RotateRightLeft(T);
 			}
 		}
 	}
-	(*T)->height=Max(Height((*T)->lchild),Height((*T)->rchild))+1;
-	return (*T);
+	T->height=Max(Height(T->lchild),Height(T->rchild))+1;
+	return T;
 }
 
 int AVL_Search(BiTNode* T,ElemType ch){
@@ -113,6 +113,20 @@ int AVL_Search(BiTNode* T,ElemType ch){
 	}else if(ch>T->data){
 		return AVL_Search(T->rchild,ch);
 	}else{
+		return 0;
+	}
+}
+
+int AVL_Delete(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		return -1;
+	}
+	if(ch<T->data){
+		return AVL_Delete(T->lchild,ch);
+	}else if(ch>T->data){
+		return AVL_Delete(T->rchild,ch);
+	}else{
+		
 		return 0;
 	}
 }
