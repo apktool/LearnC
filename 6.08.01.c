@@ -97,66 +97,25 @@ BiTNode* BST_Search(BiTNode* T,ElemType ch){
 }
 
 BiTNode* BST_Delete(BiTNode* T,ElemType ch){
-	BiTNode *pre=T;
-	BiTNode *p=T;
-	while(p!=NULL){
-		if(ch<p->data){
-			pre=p;
-			p=p->lchild;
-		}else if(ch>p->data){
-			pre=p;
-			p=p->rchild;
-		}else{
-			break;
+	if(ch<T->data){
+		return BST_Delete(T->lchild,ch);
+	}else if(ch>T->data){
+		return BST_Delete(T->rchild,ch);
+	}else{
+		BiTNode *r;
+		if(T->lchild==NULL&&T->rchild==NULL){
+			free(T);
 		}
-	}
-	if(p==NULL){
-		return p;
+		if(T->lchild==NULL&&T->rchild!=NULL){
+			r=T->rchild;
+			T->data=T->rchild->data;
+			free(r);
+		}
+		if(T->lchild!=NULL&&T->rchild==NULL){
+			
+		}
 	}
 
-	if(p->lchild==NULL&&p->rchild==NULL){
-		if(p->data<pre->data){
-			pre->lchild=NULL;
-		}else{
-			pre->rchild=NULL;
-		}	
-		free(p);
-	}
-
-	if(p->lchild!=NULL&&p->rchild==NULL){
-		if(p->data<pre->data){
-			pre->lchild=p->lchild;
-		}else{
-			pre->rchild=p->lchild;
-		}
-		free(p);
-	}
-
-	if(p->lchild==NULL&&p->rchild!=NULL){
-		if(p->data<pre->data){
-			pre->lchild=p->rchild;
-		}else{
-			pre->rchild=p->rchild;
-		}
-		free(p);
-	}
-
-	if(p->lchild!=NULL&&p->rchild!=NULL){
-		BiTNode *r=p;
-		p=p->rchild;
-		while(p->lchild!=NULL){
-			pre=p;
-			p=p->lchild;
-		}
-		r->data=p->data;
-		if(p->data<pre->data){
-			pre->lchild=p->rchild;
-		}else{
-			pre->rchild=p->rchild;
-		}
-		free(p);
-	}
-	return T;
 }
 
 void BST_Judge(BiTNode* T){
