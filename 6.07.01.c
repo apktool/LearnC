@@ -48,7 +48,7 @@ int main(int argc,char* argv[]){
 	scanf("%d",&num);
 	flag=AVL_Search(T,num);
 	flag?printf("Not Find\n"):printf("Find it\n");
-
+	
 	printf("Please input the number you want to delete: ");
 	scanf("%d",&num);
 	T=AVL_Delete(T,num);
