@@ -20,7 +20,7 @@ void InOrder(BiTNode*);
 
 int main(int argc, char* argv[]){
 	ElemType ch[MaxSize]={
-		9,5,13,3,7,11,15,4,6,10,16,-1
+		9,5,5,13,3,7,11,15,4,6,10,16,-1
 	};
 
 	BiTNode* T=NULL;
