@@ -8,12 +8,12 @@ typedef struct BiTNode{
 	ElemType data;
 	struct BiTNode *lchild,*rchild;
 	int height;
-}BiTNode, BiTree;
+}BiTNode, *BiTree;
 
 BiTNode* AVL_Create(BiTNode*,ElemType*);
-BiTNode* AVL_Insert(BiTNode**,ElemType);
-int AVL_Search(BiTNode*,ElemType);
-int AVL_Delete(BiTNode*,ElemType);
+BiTNode* AVL_Insert(BiTNode*,ElemType);
+BiTNode* AVL_Delete(BiTNode*,ElemType);
+BiTNode* AVL_Search(BiTNode*,ElemType);
 
 void AVL_Judge(BiTNode*);
 void PreOrder(BiTNode*);
@@ -36,34 +36,32 @@ int main(int argc,char* argv[]){
 
 	AVL_Judge(T);
 
-/*
-	int flag;
+	BiTNode* P=T;
 	ElemType num;
 
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
-	flag=AVL_Insert(&T,num);
-	flag?printf("illegal Insert\n"):printf("Insert Success\n");
+	P=AVL_Insert(T,num);
+	//P?printf("Insert Success\n"):printf("illegal Insert\n");
 
 	printf("Please input the number you want to find: ");
 	scanf("%d",&num);
-	flag=AVL_Search(T,num);
-	flag?printf("Not Find\n"):printf("Find it\n");
-
+	P=AVL_Search(T,num);
+	P?printf("Find it\n"):printf("Not Find\n");
+	
 	printf("Please input the number you want to delete: ");
 	scanf("%d",&num);
-	flag=AVL_Delete(T,num);
-	flag?printf("Delete Failed\n"):printf("Delete Success\n");
+	P=AVL_Delete(T,num);
+	//P?printf("Delete Success\n"):printf("Delete Failed\n");
 
 	AVL_Judge(T);
-*/
 	return 0;
 }
 
 BiTNode* AVL_Create(BiTNode* T,ElemType ch[]){
 	int i=0;
 	while(ch[i]!=-1){
-		T=AVL_Insert(&T,ch[i++]);
+		T=AVL_Insert(T,ch[i++]);
 		if(T==NULL){
 			printf("Insert illegal\n");
 			break;
@@ -72,36 +70,105 @@ BiTNode* AVL_Create(BiTNode* T,ElemType ch[]){
 	return T;
 }
 
-BiTNode* AVL_Insert(BiTNode** T,ElemType ch){
-	if((*T)==NULL){
-		(*T)=(BiTNode*)malloc(sizeof(BiTNode));
-		(*T)->data=ch;
-		(*T)->height=0;
-		(*T)->lchild=NULL;
-		(*T)->rchild=NULL;
+BiTNode* AVL_Insert(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		T=(BiTNode*)malloc(sizeof(BiTNode));
+		T->data=ch;
+		T->height=0;
+		T->lchild=NULL;
+		T->rchild=NULL;
 	}
-	if(ch<(*T)->data){
-		(*T)->lchild=AVL_Insert(&(*T)->lchild,ch);
-		if(Height((*T)->lchild)-Height((*T)->rchild)==2){
-			if(ch<(*T)->lchild->data){
-				(*T)=RotateLeftLeft(*T);
+	if(ch<T->data){
+		T->lchild=AVL_Insert(T->lchild,ch);
+		if(Height(T->lchild)-Height(T->rchild)==2){
+			if(ch<T->lchild->data){
+				T=RotateLeftLeft(T);
 			}else{
-				(*T)=RotateLeftRight(*T);
+				T=RotateLeftRight(T);
 			}
 		}
 	}
-	if(ch>(*T)->data){
-		(*T)->rchild=AVL_Insert(&(*T)->rchild,ch);
-		if(Height((*T)->rchild)-Height((*T)->lchild)==2){
-			if(ch>(*T)->rchild->data){
-				(*T)=RotateRightRight(*T);
+	if(ch>T->data){
+		T->rchild=AVL_Insert(T->rchild,ch);
+		if(Height(T->rchild)-Height(T->lchild)==2){
+			if(ch>T->rchild->data){
+				T=RotateRightRight(T);
 			}else{
-				(*T)=RotateRightLeft(*T);
+				T=RotateRightLeft(T);
 			}
 		}
 	}
-	(*T)->height=Max(Height((*T)->lchild),Height((*T)->rchild))+1;
-	return (*T);
+	
+	T->height=Max(Height(T->lchild),Height(T->rchild))+1;
+	return T;
+}
+
+BiTNode* AVL_Search(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		return NULL;
+	}
+	if(ch<T->data){
+		return AVL_Search(T->lchild,ch);
+	}else if(ch>T->data){
+		return AVL_Search(T->rchild,ch);
+	}else{
+		return T;
+	}
+}
+
+BiTNode* AVL_Delete(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		return NULL;
+	}
+	if(ch<T->data){
+		T->lchild=AVL_Delete(T->lchild,ch);
+		if(Height(T->rchild)-Height(T->lchild)==2){
+			if(T->rchild->lchild!=NULL&&(Height(T->rchild->lchild)>Height(T->rchild->lchild))){
+				T=RotateRightLeft(T);
+			}else{
+				T=RotateRightRight(T);
+			}
+		}
+	}else if(ch>T->data){
+		T->rchild=AVL_Delete(T->rchild,ch);
+		if(Height(T->lchild)-Height(T->rchild)==2){
+			if(T->lchild->rchild!=NULL&&(Height(T->lchild->rchild)>Height(T->lchild->rchild))){
+				T=RotateLeftRight(T);
+			}else{
+				T=RotateLeftLeft(T);
+			}
+		}
+	}else{
+		BiTNode *r=NULL;
+		if(T->lchild!=NULL&&T->rchild!=NULL){
+			r=T->rchild;
+			while(r->lchild!=NULL){
+				r=r->lchild;
+			}
+			T->data=r->data;
+			T->rchild=AVL_Delete(T->rchild,r->data);
+			if(Height(T->lchild)-Height(T->rchild)==2){
+				if(T->lchild->rchild!=NULL&&(Height(T->lchild->rchild)>Height(T->lchild->rchild))){
+					T=RotateLeftRight(T);
+				}else{
+					T=RotateLeftLeft(T);
+				}
+			}
+		}else{
+			r=T;
+			if(T->lchild==NULL){
+				T=T->rchild;
+			}else{
+				T=T->lchild;
+			}
+			free(r);
+			r=NULL;
+		}
+	}
+	if(T!=NULL){
+		T->height=Max(Height(T->lchild),Height(T->rchild))+1;
+	}
+	return T;
 }
 
 BiTNode* RotateLeftLeft(BiTNode* T){
