@@ -1,4 +1,4 @@
-//二叉排序树|Binary Search Tree[BST]|非递归插入，非递归查找
+//二叉排序树|Binary Search Tree[BST]|非递归插入，非递归查找,非递归删除
 #include<stdio.h>
 #include<stdlib.h>
 #define MaxSize 20
