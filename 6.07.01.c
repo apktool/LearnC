@@ -138,7 +138,7 @@ BiTNode* AVL_Delete(BiTNode* T,ElemType ch){
 			}
 		}
 	}else{
-		BiTNode *r;
+		BiTNode *r=NULL;
 		if(T->lchild!=NULL&&T->rchild!=NULL){
 			r=T->rchild;
 			while(r->lchild!=NULL){
