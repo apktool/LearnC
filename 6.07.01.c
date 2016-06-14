@@ -145,7 +145,7 @@ BiTNode* AVL_Delete(BiTNode* T,ElemType ch){
 				r=r->lchild;
 			}
 			T->data=r->data;
-			T->rchild=AVL_Delete(T->rchild,ch);
+			T->rchild=AVL_Delete(T->rchild,r->data);
 			if(Height(T->lchild)-Height(T->rchild)==2){
 				if(T->lchild->rchild!=NULL&&(Height(T->lchild->rchild)>Height(T->lchild->rchild))){
 					RotateLeftRight(T);
@@ -157,14 +157,16 @@ BiTNode* AVL_Delete(BiTNode* T,ElemType ch){
 			r=T;
 			if(T->lchild==NULL){
 				T=T->rchild;
-			}else if(T->rchild==NULL){
+			}else{
 				T=T->lchild;
 			}
 			free(r);
 			r=NULL;
 		}
 	}
-	T->height=Max(Height(T->lchild),Height(T->rchild))+1;
+	if(T!=NULL){
+		T->height=Max(Height(T->lchild),Height(T->rchild))+1;
+	}
 	return T;
 }
 
