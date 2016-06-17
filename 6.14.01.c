@@ -15,6 +15,7 @@ BiTNode* ST_Insert(BiTNode*,ElemType);
 BiTNode* ST_Splay(BiTNode*,ElemType);
 BiTNode* ST_Search(BiTNode*,ElemType);
 BiTNode* ST_Delete(BiTNode*,ElemType);
+BiTNode* BST_Insert(BiTNode*,ElemType);
 
 BiTNode* ST_MaxNum(BiTNode*);
 BiTNode* ST_MinNum(BiTNode*);
@@ -22,6 +23,7 @@ BiTNode* ST_MinNum(BiTNode*);
 BiTNode* RotateLeft(BiTNode*);
 BiTNode* RotateRight(BiTNode*);
 
+void ST_Destroy(BiTNode*);
 void ST_Judge(BiTNode*);
 void PreOrder(BiTNode*);
 void InOrder(BiTNode*);
@@ -40,17 +42,13 @@ int main(int argc, char* argv[]){
 	ElemType num;
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
-	P=ST_Insert(T,num);
-	P?printf("The number is inserted successlly\n"):printf("Insert Failed");
-	if(P!=NULL){
-		T=ST_Splay(T,num);
-		T?printf("The tree is Spalyed successlly\n"):printf("Splay Failed");
-	}
+	T=ST_Insert(T,num);
+	T?printf("The number is inserted successlly\n"):printf("Insert Failed");
 
 	printf("Please input the number you will find: ");
 	scanf("%d",&num);
-	T=ST_Splay(T,num);
-	T?(T->data==num?printf("Find %d\n",T->data):printf("Not Find\n")):printf("Not Find\n");
+	P=ST_Search(T,num);
+	P?printf("Find the number %d",P->data):printf("Not Find\n");
 
 	P=ST_MaxNum(T);
 	P?printf("The Max number is %d\n",P->data):printf("Not Find\n");
@@ -76,21 +74,35 @@ BiTNode* ST_Create(BiTNode* T, ElemType ch[]){
 	return T;
 }
 
-BiTNode* ST_Insert(BiTNode* T, ElemType ch){
-	if(T==NULL){
-		T=(BiTNode*)malloc(sizeof(BiTNode));
-		T->data=ch;
-		T->lchild=NULL;
-		T->rchild=NULL;
+BiTNode* BST_Insert(BiTNode* T, ElemType ch){
+	BiTNode *pre=T,*p=T;
+	while(p!=NULL){
+		pre=p;
+		if(ch<p->data){
+			p=p->lchild;
+		}else if(ch>p->data){
+			p=p->rchild;
+		}else{
+			return NULL;
+		}
 	}
+	p=(BiTNode*)malloc(sizeof(BiTNode));
+	p->data=ch;
+	p->lchild=NULL;
+	p->rchild=NULL;
+	if(ch<pre->data){
+		pre->lchild=p;
+	}else{
+		pre->rchild=p;
+	}
+	return T;
+}
 
-	if(ch<T->data){
-		T->lchild=ST_Insert(T->lchild,ch);
+BiTNode* ST_Insert(BiTNode*T, ElemType ch){
+	T=BST_Insert(T,ch);
+	if(T!=NULL){
+		T=ST_Splay(T,ch);
 	}
-	if(ch>T->data){
-		T->rchild=ST_Insert(T->rchild,ch);
-	}
-
 	return T;
 }
 
@@ -142,8 +154,26 @@ BiTNode* ST_Splay(BiTNode* T, ElemType ch){
 	return T;
 }
 
-BiTNode* ST_Search(BiTNode*T ,ElemType ch){
-	T=ST_Splay(T,ch);
+
+void ST_Destroy(BiTNode* T){
+	if(T==NULL){
+		return;
+	}
+	ST_Destroy(T->lchild);
+	ST_Destroy(T->rchild);
+	free(T);	
+}
+
+BiTNode* ST_Search(BiTNode*T, ElemType ch){
+	while(T){
+		if(ch<T->data){
+			T=T->lchild;
+		}else if(ch>T->data){
+			T=T->rchild;
+		}else{
+			break;
+		}
+	}
 	return T;
 }
 
