@@ -43,18 +43,26 @@ int main(int argc, char* argv[]){
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
 	T=ST_Insert(T,num);
-	T?printf("The number is inserted successlly\n"):printf("Insert Failed");
+//	printf("The number is inserted successlly\n");
+	ST_Judge(T);
 
 	printf("Please input the number you will find: ");
 	scanf("%d",&num);
 	P=ST_Search(T,num);
-	P?printf("Find the number %d",P->data):printf("Not Find\n");
+	P?printf("Find the number %d\n",P->data):printf("Not Find\n");
 
 	P=ST_MaxNum(T);
 	P?printf("The Max number is %d\n",P->data):printf("Not Find\n");
 
 	P=ST_MinNum(T);
 	P?printf("The Min number is %d\n",P->data):printf("Not Find\n");
+
+	printf("Please input the number you will delete: ");
+	scanf("%d",&num);
+	P=ST_Delete(T,num);
+	P?printf("The number %d is deleted\n",P->data):printf("Not Find\n");
+	
+	//ST_Destroy(T);
 
 	ST_Judge(T);
 	return 0;
@@ -69,13 +77,20 @@ BiTNode* ST_Create(BiTNode* T, ElemType ch[]){
 			printf("Illege created\n");
 			break;
 		}
-		T=ST_Splay(T,tmp);
 	}
 	return T;
 }
 
 BiTNode* BST_Insert(BiTNode* T, ElemType ch){
 	BiTNode *pre=T,*p=T;
+	if(T==NULL){
+		T=(BiTNode*)malloc(sizeof(BiTNode));
+		T->data=ch;
+		T->lchild=NULL;
+		T->rchild=NULL;
+		return T;
+	}
+
 	while(p!=NULL){
 		pre=p;
 		if(ch<p->data){
@@ -86,13 +101,16 @@ BiTNode* BST_Insert(BiTNode* T, ElemType ch){
 			return NULL;
 		}
 	}
+
 	p=(BiTNode*)malloc(sizeof(BiTNode));
 	p->data=ch;
 	p->lchild=NULL;
 	p->rchild=NULL;
-	if(ch<pre->data){
+
+	if(pre!=NULL&&ch<pre->data){
 		pre->lchild=p;
-	}else{
+	}
+	if(pre!=NULL&&ch>pre->data){
 		pre->rchild=p;
 	}
 	return T;
@@ -154,6 +172,30 @@ BiTNode* ST_Splay(BiTNode* T, ElemType ch){
 	return T;
 }
 
+BiTNode* ST_Delete(BiTNode* T, ElemType ch){
+	BiTNode* p=T;
+
+	if(T==NULL){
+		return NULL;
+	}
+
+	p=ST_Search(T,ch);
+	if(p==NULL){
+		return NULL;
+	}
+
+	T=ST_Splay(T,ch);
+	if(T->lchild!=NULL){
+		p=ST_Splay(T->lchild,ch);
+		p->rchild=T->rchild;
+	}else{
+		p=T->rchild;
+	}
+
+	free(T);
+
+	return p;
+}
 
 void ST_Destroy(BiTNode* T){
 	if(T==NULL){
