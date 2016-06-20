@@ -42,9 +42,13 @@ int main(int argc, char* argv[]){
 	ElemType num;
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
-	T=ST_Insert(T,num);
-//	printf("The number is inserted successlly\n");
-	ST_Judge(T);
+	P=ST_Insert(T,num);
+	if(P!=NULL){
+		printf("the number %d is inserted successfully\n",P->data);
+		T=P;
+	}else{
+		printf("Have the same number\n");
+	}
 
 	printf("Please input the number you will find: ");
 	scanf("%d",&num);
@@ -60,11 +64,17 @@ int main(int argc, char* argv[]){
 	printf("Please input the number you will delete: ");
 	scanf("%d",&num);
 	P=ST_Delete(T,num);
-	P?printf("The number %d is deleted\n",P->data):printf("Not Find\n");
+	if(P!=NULL){
+		printf("The number %d is deleted\n",num);
+		T=P;
+	}else{
+		printf("Not find the number\n");
+	}
 	
-	//ST_Destroy(T);
-
 	ST_Judge(T);
+
+	//ST_Destroy(T);
+	//ST_Judge(T);
 	return 0;
 }
 
@@ -117,9 +127,12 @@ BiTNode* BST_Insert(BiTNode* T, ElemType ch){
 }
 
 BiTNode* ST_Insert(BiTNode*T, ElemType ch){
-	T=BST_Insert(T,ch);
-	if(T!=NULL){
-		T=ST_Splay(T,ch);
+	BiTNode* p=T;
+	p=BST_Insert(T,ch);
+	if(p!=NULL){
+		T=ST_Splay(p,ch);
+	}else{
+		return NULL;
 	}
 	return T;
 }
@@ -184,17 +197,18 @@ BiTNode* ST_Delete(BiTNode* T, ElemType ch){
 		return NULL;
 	}
 
-	T=ST_Splay(T,ch);
-	if(T->lchild!=NULL){
-		p=ST_Splay(T->lchild,ch);
-		p->rchild=T->rchild;
+	BiTNode* q=NULL;
+	q=ST_Splay(T,ch);
+	if(q->lchild!=NULL){
+		p=ST_MaxNum(q->lchild);
+		T=ST_Splay(q,p->data);
+		T->rchild=q->rchild;
 	}else{
-		p=T->rchild;
+		T=q->rchild;
 	}
+	free(q);
 
-	free(T);
-
-	return p;
+	return T;
 }
 
 void ST_Destroy(BiTNode* T){
