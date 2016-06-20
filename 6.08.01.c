@@ -1,4 +1,4 @@
-//二叉排序树|Binary Search Tree[BST]|递归插入，查找
+//二叉排序树|Binary Search Tree[BST]|递归插入，递归查找，递归删除
 #include<stdio.h>
 #include<stdlib.h>
 #define MaxSize 20
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
 	printf("Please input the number you will insert: ");
 	scanf("%d",&num);
 	P=BST_Insert(T,num);
-	P?printf("Insert Success\n"):printf("Illeged Insert\n");
+	//P?printf("Insert Success\n"):printf("Illeged Insert\n");
 
 	printf("Please input the number you will Find: ");
 	scanf("%d",&num);
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]){
 	printf("Please input the number you will Delete: ");
 	scanf("%d",&num);
 	P=BST_Delete(T,num);
-	P?printf("Delete Success\n"):printf("illege Delete\n");
+	//P?printf("Delete Success\n"):printf("illege Delete\n");
 
 	BST_Judge(T);
 	return 0;
@@ -62,23 +62,18 @@ BiTree BST_Create(BiTNode* T, ElemType ch[]){
 }
 
 BiTNode* BST_Insert(BiTNode* T,ElemType ch){
-	int flag=1;
 	if(T==NULL){
 		T=(BiTNode*)malloc(sizeof(BiTNode));
 		T->data=ch;
 		T->lchild=NULL;
 		T->rchild=NULL;
-		flag=0;
 	}
-		if(ch<T->data){
-			T->lchild=BST_Insert(T->lchild,ch);
-		}
-		if(ch>T->data){
-			T->rchild=BST_Insert(T->rchild,ch);
-		}
-		if(ch==T->data&&flag){
-			return NULL;
-		}
+	if(ch<T->data){
+		T->lchild=BST_Insert(T->lchild,ch);
+	}
+	if(ch>T->data){
+		T->rchild=BST_Insert(T->rchild,ch);
+	}
 
 	return T;
 }
@@ -97,25 +92,34 @@ BiTNode* BST_Search(BiTNode* T,ElemType ch){
 }
 
 BiTNode* BST_Delete(BiTNode* T,ElemType ch){
+	if(T==NULL){
+		return NULL;
+	}
 	if(ch<T->data){
-		return BST_Delete(T->lchild,ch);
+		T->lchild=BST_Delete(T->lchild,ch);
 	}else if(ch>T->data){
-		return BST_Delete(T->rchild,ch);
+		T->rchild=BST_Delete(T->rchild,ch);
 	}else{
-		BiTNode *r;
-		if(T->lchild==NULL&&T->rchild==NULL){
-			free(T);
-		}
-		if(T->lchild==NULL&&T->rchild!=NULL){
+		BiTNode *r=NULL;
+		if(T->lchild!=NULL&&T->rchild!=NULL){
 			r=T->rchild;
-			T->data=T->rchild->data;
+			while(r->lchild!=NULL){
+				r=r->lchild;
+			}
+			T->data=r->data;
+			T->rchild=BST_Delete(T->rchild,r->data);
+		}else{
+			r=T;
+			if(T->lchild==NULL){
+				T=T->rchild;
+			}else{
+				T=T->lchild;
+			}
 			free(r);
-		}
-		if(T->lchild!=NULL&&T->rchild==NULL){
-			
+			r=NULL;
 		}
 	}
-
+	return T;
 }
 
 void BST_Judge(BiTNode* T){

@@ -1,4 +1,4 @@
-//二叉排序树|Binary Search Tree[BST]|非递归插入，非递归查找
+//二叉排序树|Binary Search Tree[BST]|非递归插入，非递归查找,非递归删除
 #include<stdio.h>
 #include<stdlib.h>
 #define MaxSize 20
@@ -64,6 +64,13 @@ BiTree BST_Create(BiTNode* T, ElemType ch[]){
 BiTNode* BST_Insert(BiTNode* T,ElemType ch){
 	BiTNode *pre=NULL;
 	BiTNode *p=T;
+	if(T==NULL){
+		T=(BiTNode*)malloc(sizeof(BiTNode));
+		T->data=ch;
+		T->lchild=NULL;
+		T->rchild=NULL;
+		return T;
+	}
 	
 	while(p!=NULL){
 		if(ch<p->data){
@@ -81,7 +88,7 @@ BiTNode* BST_Insert(BiTNode* T,ElemType ch){
 	p->data=ch;
 	p->lchild=NULL;
 	p->rchild=NULL;
-	
+
 	if(pre!=NULL&&ch<pre->data){
 		pre->lchild=p;
 	}
@@ -93,22 +100,17 @@ BiTNode* BST_Insert(BiTNode* T,ElemType ch){
 }
 
 BiTNode* BST_Search(BiTNode* T,ElemType ch){
-	BiTNode* pre=NULL;
 	BiTNode* p=T;
-	if(p==NULL){
-		return NULL;
-	}
 	while(p!=NULL){
 		if(ch<p->data){
-			pre=p;
 			p=p->lchild;
 		}else if(ch>p->data){
-			pre=p;
 			p=p->rchild;
 		}else{
 			return p;
 		}
 	}
+	return p;
 }
 
 BiTNode* BST_Delete(BiTNode* T,ElemType ch){
