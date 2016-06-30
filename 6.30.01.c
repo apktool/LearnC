@@ -1,6 +1,6 @@
 /**
  * @file 6.30.01.c
- * @brief fork()
+ * @brief fork(),getpid()
  * @author LiWenGang
  * @date 2016-06-30
  */
@@ -18,6 +18,6 @@ int main(int argc,char* argv[]){
 		case 0:val+=2;cnt/=2;break;
 		default:sleep(2);break;
 	}
-	printf("%d\t%s\tval=%d\tcnt=%d\n",childPID,childPID==0?"childe":"parent",val,cnt);
+	printf("%d\t%d\t%s\tval=%d\tcnt=%d\n",childPID,getpid(),childPID==0?"childe":"parent",val,cnt);
 	return 0;
 }
