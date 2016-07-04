@@ -23,6 +23,6 @@ int main(int argc, char* argv[]){
 }
 
 /*
- * gcc 7.04.04_02.c -o temp -Wall -std=c11
+ * gcc 7.04.04_02.c -o temp2 -Wall -std=c11
  * ./temp2 ./temp1
  */
