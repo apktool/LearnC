@@ -20,20 +20,20 @@ int main(int argc, char* argv[]){
 				pid=fork();
 				switch(pid){
 					case -1:perror("error fork\n");
+							exit(EXIT_FAILURE);
 							break;
 					case  0:sleep(3);
 							printf("I am the second child.|pid=%d|ppid=%d\n",getpid(),getppid());
-							_exit(EXIT_FAILURE);
+							_exit(EXIT_SUCCESS);
 					default:printf("first process is end\n");
 							exit(EXIT_SUCCESS);
 				}
-				_exit(EXIT_FAILURE);
+				_exit(EXIT_SUCCESS);
 		default:if(pid!=waitpid(pid,NULL,0)){
 					perror("waitpid error\n");
 				}
 				exit(EXIT_SUCCESS);
 	}
-
 	return 0;
 }
 
