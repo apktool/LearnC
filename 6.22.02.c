@@ -18,8 +18,11 @@ int main(int argc, char* argv[]){
 
 	ssize_t numMax;
 
-	numMax=write(fd,buffer,0);
+	numMax=write(fd,buffer,20);
 	numMax==-1?printf("Write Failed\n"):printf("Write Success|%ld->%s\n",numMax,buffer);
+
+	//此处必须重新设置文件标识符的偏移量，因为write()已经将文件偏移量做过修改，如果不将其归位的话，会导致read()读不出东西。
+	lseek(fd,0,SEEK_SET);
 
 	numMax=read(fd,buffer,MaxSize);
 	buffer[numMax]=0;
