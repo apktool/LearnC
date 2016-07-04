@@ -30,6 +30,7 @@ int main(int argc, char* argv[]){
 				sleep(2);
 				system("ps -o pid,ppid,state,tty,command");
 				printf("father proccess is exiting\n");
+				exit(EXIT_SUCCESS);
 				break;
 	}
 	return 0;
