@@ -1,6 +1,6 @@
 /**
  * @file 7.04.03.c
- * @brief pipe|管道
+ * @brief pipe|管道操作
  * @author LiWenGang
  * @date 2016-07-04
  */
@@ -36,3 +36,6 @@ int main(int argc, char* argv[]){
 	}
 	return 0;
 }
+/*
+ * pipe操作的时候，父子进程的标识符顺序不能写反，一定是从1口写入，0口写出。
+ */
