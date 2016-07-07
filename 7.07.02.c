@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
 	pthread_t thd1,thd2;
 	int loops,flag;
 
-	loops=10000000;
+	loops=1000000;
 	flag=pthread_create(&thd1,NULL,threadFun,&loops);
 	if(flag!=0){
 		perror("pthread create error\n");
@@ -56,3 +56,12 @@ static void* threadFun(void* arg){
 	}
 	return NULL;
 }
+
+/*
+ * 关于此处有个疑问，当main()中的函数次序写成如下形式的时候
+ *	flag=pthread_create(&thd1,NULL,threadFun,&loops);
+ *	flag=pthread_join(thd1,NULL);
+ *	flag=pthread_create(&thd2,NULL,threadFun,&loops);
+ *	flag=pthread_join(thd2,NULL);
+ * 无需加锁，结果也正常。
+ */
