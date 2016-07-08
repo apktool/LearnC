@@ -11,7 +11,7 @@
 
 static int glob=0;
 static void* threadFun(void*);
-static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mtx=PTHREAD_MUTEX_INITIALIZER;//静态分配互斥量
 
 int main(int argc, char* argv[]){
 	pthread_t thd1,thd2;
