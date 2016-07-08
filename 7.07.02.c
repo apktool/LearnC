@@ -4,7 +4,6 @@
  * @author LiWenGang
  * @date 2016-07-07
  */
-#include<sys/types.h>
 #include<pthread.h>
 #include<stdio.h>
 #include<stdlib.h>
@@ -64,4 +63,7 @@ static void* threadFun(void* arg){
  *	flag=pthread_create(&thd2,NULL,threadFun,&loops);
  *	flag=pthread_join(thd2,NULL);
  * 无需加锁，结果也正常。
+ *
+ * 运行指令
+ * gcc 7.07.02.c -o temp -Wall -std=c11 -lpthread
  */
