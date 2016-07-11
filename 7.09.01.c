@@ -1,3 +1,9 @@
+/**
+ * @file 7.09.01.c
+ * @brief 消费者，生产者。不使用条件变量
+ * @author LiWenGang
+ * @date 2016-07-09
+ */
 #include<pthread.h>
 #include<unistd.h>
 #include<time.h>
@@ -74,3 +80,11 @@ static void* threadFunc(void* arg){
 
 	return NULL;
 }
+
+/*
+ * 关于多线程编程应该特别注意程序的执行方式，加锁的位置。
+ * 比如在本程序中:
+ * threadFunc函数中，avail每被加锁一次，本身自增一次，解锁后，接着会执行main函数中的加锁->自减->解锁;
+ * 接着又会执行threadFunc函数中的加锁->自增->解锁；依次类推
+ * 直至满足for循环，彻底退出threadFunc函数。
+ */ 
