@@ -25,3 +25,9 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
+/*
+ * ps -p $$ -o 'pid pgid sid command'
+ * 使用setsid()来创建一个新会话，为了检查该进程已经不再拥有控制终端了，这个程序尝试打开一个特殊文件/dev/tty。
+ * 如果调用进程不是进程组的首进程，那么setsid()会创建一个新会话；
+ * 如果调用进程是一个进程组的手进程，那么setsid()会报出EPERM错误。
+ */ 
