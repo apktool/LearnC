@@ -1,3 +1,9 @@
+/**
+ * @file 7.13.01.c
+ * @brief sigaction()
+ * @author LiWenGang
+ * @date 2016-07-13
+ */
 #include<signal.h>
 #include<unistd.h>
 #include<stdio.h>
