@@ -1,3 +1,9 @@
+/**
+ * @file 7.19.02.c
+ * @brief time,strftime
+ * @author LiWenGang
+ * @date 2016-07-19
+ */
 #include<sys/types.h>
 #include<time.h>
 #include<stdio.h>
