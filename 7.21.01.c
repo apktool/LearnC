@@ -127,6 +127,10 @@ int parse_command(void){
 	if(check("\n")){
 		return 0;
 	}
+	if(buildtin()){
+		return 0;
+	}
+	get_command(0);
 }
 
 int execute_command(void){
