@@ -49,10 +49,10 @@ int check(const char* str);
 
 void do_exit(void);
 void do_cd(void);
-void do_type(void);
+//void do_type(void);
 void do_about(void);
-void do_jobs(void);
-void do_kill(void);
+//void do_jobs(void);
+//void do_kill(void);
 
 typedef void (*cmd_handler)(void);
 typedef struct builtin_cmd{
@@ -62,10 +62,10 @@ typedef struct builtin_cmd{
 builtin_cmd_t builtins[]={
 	{ "exit",do_exit },
 	{ "cd",do_cd },
-	{ "type",do_type },
+	//{ "type",do_type },
 	{ "about",do_about },
-	{ "jobs",do_jobs },
-	{ "kill",do_kill },
+	//{ "jobs",do_jobs },
+	//{ "kill",do_kill },
 	{ NULL,NULL }
 };
 
@@ -130,7 +130,8 @@ int parse_command(void){
 	if(buildtin()){
 		return 0;
 	}
-	get_command(0);
+//	get_command(0);
+	return 0;
 }
 
 int execute_command(void){
