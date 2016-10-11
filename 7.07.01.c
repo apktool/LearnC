@@ -1,6 +1,6 @@
 /**
  * @file 7.07.01.c
- * @brief pthread_creat(),pthread_join()
+ * @brief pthread_creat(),pthread_join(),pthread_exit()
  * @author LiWenGang
  * @date 2016-07-07
  */
@@ -28,6 +28,7 @@ int main(int argc, char* argv[]){
 		perror("error pthread join");
 	}
 	printf("%ld\n",(long int)s);
+	pthread_exit(s);
 	return 0;
 }
 
