@@ -37,6 +37,6 @@ int main(int argc, char* argv[]){
 }
 
 /*
- * 当parent进程创建了child进程时，进程组ID与parent进程的ID相等；会话的ID为parent进程的父进程的ID
+ * 当parent进程创建了child进程时，进程组ID与parent进程的ID相等；会话的ID为parent进程的父进程的ID（这里的父进程的ID实际是指shell进程）
  * 当child进程使用setsid()设置了会话ID时，child进程的ID便会同时变为新的进程组ID，会话ID
  */
