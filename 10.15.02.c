@@ -9,8 +9,8 @@
 #include<stdio.h>
 
 int main(int argc, char* argv[]){
-	unsigned long addr=inet_addr("192.168.1.100");
-	printf("addr=%u\n",ntohl(addr));//将点分十进制化大端字节序
+	unsigned long addr=inet_addr("192.168.1.100");//将点分十进制化网络字节序
+	printf("addr=%u\n",ntohl(addr));
 
 	struct in_addr ipaddr;
 	ipaddr.s_addr=addr;
@@ -24,4 +24,11 @@ int main(int argc, char* argv[]){
  * 数据报式套接字 | SOCK_DGRAM
  * 提供无连接服务。不提供无错保证，数据可能丢失或重复，并且接收顺序混乱。
  * 原始套接字 | SOCK_RAW
+ */
+
+/*
+ * htons 把 unsigned short 类型从主机序转换到网络序
+ * htonl 把 unsigned long  类型从主机序转换到网络序
+ * ntohs 把 unsigned short 类型从网络序转换到主机序
+ * ntohl 把 unsigned long  类型从网络序转到主机序
  */
