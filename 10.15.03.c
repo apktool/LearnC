@@ -65,6 +65,7 @@ int main(int argc, char* argv[]){
 					break;
 			case  0:close(listenfd);
 					do_service(conn);
+					_exit(EXIT_SUCCESS);
 					break;
 			default:close(conn);
 					break;
@@ -78,6 +79,14 @@ void do_service(int conn){
 	while(1){
 		memset(recvbuf,0,sizeof(recvbuf));
 		int ret=read(conn,recvbuf,sizeof(recvbuf));
+		assert(ret!=-1);
+		/*
+		 * 捕捉客户端退出
+		 */
+		if(ret==0){
+			printf("client close\n");
+			break;
+		}
 		fputs(recvbuf,stdout);
 		write(conn,recvbuf,ret);
 	}
