@@ -29,6 +29,15 @@ int main(int argc, char* argv[]){
 //	servaddr.sin_addr.s_addr=inet_addr("127.0.0.1");
 //	inet_aton("127.0.0.1",&servaddr.sin_addr);
 	
+	/*
+	 * 为了防止因为退出服务器端退出登陆，因为socket被占用而不能继续登陆的问题
+	 * netstat -an | grep TIME_WAIT
+	 */
+	int on;
+	if(setsockopt(listenfd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on))<0){
+		perror("error setsockopt!");
+	}
+	
 	int flag;
 	flag=bind(listenfd,(struct sockaddr*)&servaddr,sizeof(servaddr));
 	assert(flag!=-1);
