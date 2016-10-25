@@ -14,7 +14,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-//extern uint16_t htons(uint16_t hostshort);
+void do_service(int conn);
 
 int main(int argc, char* argv[]){
 	int listenfd;
@@ -48,9 +48,32 @@ int main(int argc, char* argv[]){
 	struct sockaddr_in peeraddr;
 	socklen_t peerlen=sizeof(peeraddr);
 	int conn;
-	conn=accept(listenfd,(struct sockaddr*)&peeraddr,&peerlen);//主动套接字
-	assert(conn!=-1);
 
+	/*
+	 * 解决只能为一个客户端服务的问题
+	 */
+	pid_t pid;
+	while(1){
+
+		conn=accept(listenfd,(struct sockaddr*)&peeraddr,&peerlen);//主动套接字
+		assert(conn!=-1);
+		printf("ip=%s\tport=%d\n",inet_ntoa(peeraddr.sin_addr),peeraddr.sin_port);
+
+		pid=fork();
+		switch(pid){
+			case -1:perror("error fork");
+					break;
+			case  0:close(listenfd);
+					do_service(conn);
+					break;
+			default:close(conn);
+					break;
+		}
+	}
+	return 0;
+}
+
+void do_service(int conn){
 	char recvbuf[1024];
 	while(1){
 		memset(recvbuf,0,sizeof(recvbuf));
@@ -58,9 +81,6 @@ int main(int argc, char* argv[]){
 		fputs(recvbuf,stdout);
 		write(conn,recvbuf,ret);
 	}
-	close(conn);
-	close(listenfd);
-	return 0;
 }
 
 /*
